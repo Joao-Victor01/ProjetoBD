@@ -13,6 +13,7 @@ public class ConsultasRepository {
 
     private static String NOVACONSULTA = "INSERT INTO consultas (nome_paciente, nome_medico, data_consulta, motivo_consulta) VALUES (?, ?, ?, ?)";
     private static String BUSCARCONSULTA = "SELECT * FROM consultas WHERE id_consulta = ?";
+    private static String CONSULTAPORPACIENTE = "SELECT * FROM consultas WHERE nome_paciente = ?";
     private static String DELETARCONSULTA = "DELETE FROM consultas WHERE id_consulta = ?";
     private static String ATUALIZARCONSULTA = "UPDATE consultas SET nome_paciente = ?, nome_medico = ?, data_consulta = ?, motivo_consulta = ? WHERE id_consulta = ?";
     private static String LISTARCONSULTAS = "SELECT * FROM consultas";
@@ -28,6 +29,11 @@ public class ConsultasRepository {
 
     public Optional<ConsultasEntity> buscarConsultaPorId(Integer id) {
         List<ConsultasEntity> consultas = jdbcTemplate.query(BUSCARCONSULTA, new Object[]{id}, new BeanPropertyRowMapper<>(ConsultasEntity.class));
+        return consultas.stream().findFirst();
+    }
+
+    public Optional<ConsultasEntity> buscarConsultaPorPaciente (String nomePaciente){
+        List<ConsultasEntity> consultas = jdbcTemplate.query(BUSCARCONSULTA, new Object[]{nomePaciente}, new BeanPropertyRowMapper<>(ConsultasEntity.class));
         return consultas.stream().findFirst();
     }
 
