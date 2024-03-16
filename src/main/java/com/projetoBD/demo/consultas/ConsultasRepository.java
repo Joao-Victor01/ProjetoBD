@@ -36,7 +36,12 @@ public class ConsultasRepository {
     }
 
     public void atualizarConsulta(ConsultasEntity consulta) {
-        jdbcTemplate.update(ATUALIZARCONSULTA, consulta.getNomePaciente(), consulta.getNomeMedico(), consulta.getDataConsulta(), consulta.getMotivoConsulta(), consulta.getIdConsulta());
+       try{
+           jdbcTemplate.update(ATUALIZARCONSULTA, consulta.getNomePaciente(), consulta.getNomeMedico(), consulta.getDataConsulta(), consulta.getMotivoConsulta(), consulta.getIdConsulta());
+
+       }catch(Exception exception){
+           System.out.println("Erro: "+exception);
+        }
     }
 
 

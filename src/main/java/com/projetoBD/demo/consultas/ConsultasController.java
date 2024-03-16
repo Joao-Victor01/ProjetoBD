@@ -4,6 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -17,13 +21,16 @@ public class ConsultasController {
 
     @PostMapping("/create")
     @ResponseBody
-    public String marcarConsulta(@RequestBody ConsultasEntity consulta) {
+    public ResponseEntity<String> marcarConsulta(@RequestBody ConsultasEntity consulta) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
         try {
             consultasRepository.marcarConsulta(consulta);
-            return "Consulta criada com sucesso!";
+            return ResponseEntity.ok().headers(headers).body("Consulta criada com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
-            return "Erro ao criar consulta.";
+            return ResponseEntity.status(500).headers(headers).body("Erro ao criar consulta.");
         }
     }
 
@@ -43,12 +50,15 @@ public class ConsultasController {
     @PutMapping("/update/{id}")
     @ResponseBody
     public ResponseEntity<String> atualizarConsulta(@PathVariable Integer id, @RequestBody ConsultasEntity novaConsulta) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
         Optional<ConsultasEntity> consultaExistente = consultasRepository.buscarConsultaPorId(id);
         if (consultaExistente.isPresent()) {
             novaConsulta.setIdConsulta(id);
             consultasRepository.atualizarConsulta(novaConsulta);
-            return ResponseEntity.ok("Consulta atualizada com sucesso!");
+            return ResponseEntity.ok().headers(headers).body("Consulta atualizada com sucesso!");
         } else {
+
             return ResponseEntity.notFound().build();
         }
     }
