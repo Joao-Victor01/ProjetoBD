@@ -33,7 +33,7 @@ public class ConsultasRepository {
     }
 
     public Optional<ConsultasEntity> buscarConsultaPorPaciente (String nomePaciente){
-        List<ConsultasEntity> consultas = jdbcTemplate.query(BUSCARCONSULTA, new Object[]{nomePaciente}, new BeanPropertyRowMapper<>(ConsultasEntity.class));
+        List<ConsultasEntity> consultas = jdbcTemplate.query(CONSULTAPORPACIENTE, new Object[]{nomePaciente}, new BeanPropertyRowMapper<>(ConsultasEntity.class));
         return consultas.stream().findFirst();
     }
 

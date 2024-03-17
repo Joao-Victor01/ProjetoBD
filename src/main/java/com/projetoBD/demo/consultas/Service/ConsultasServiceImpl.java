@@ -29,6 +29,11 @@ public class ConsultasServiceImpl implements ConsultasService {
     }
 
     @Override
+    public Optional<ConsultasEntity> consultasPorPaciente(String nome){
+        return consultasRepository.buscarConsultaPorPaciente(nome);
+    }
+
+    @Override
     public void atualizarConsulta(ConsultasEntity consulta) {
         consultasRepository.atualizarConsulta(consulta);
     }

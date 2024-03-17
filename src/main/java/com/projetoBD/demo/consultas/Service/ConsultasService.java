@@ -8,6 +8,9 @@ public interface ConsultasService {
     List<ConsultasEntity> listarTodasConsultas();
     void salvarConsulta(ConsultasEntity consulta);
     Optional<ConsultasEntity> buscarConsultaPorId(Integer id);
+
+    Optional<ConsultasEntity> consultasPorPaciente(String nome);
+
     void atualizarConsulta(ConsultasEntity consulta);
     void deletarConsulta(Integer id);
 }

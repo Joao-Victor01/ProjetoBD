@@ -38,6 +38,13 @@ public class ConsultasController {
         return consulta.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/paciente/{nome}")
+    @ResponseBody
+    public ResponseEntity<ConsultasEntity> consultasPorPaciente(@PathVariable String nome){
+        Optional<ConsultasEntity> consultas = consultasService.consultasPorPaciente(nome);
+        return consultas.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/all")
     @ResponseBody
     public List<ConsultasEntity> listarConsultas(){
