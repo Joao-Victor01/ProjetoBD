@@ -37,9 +37,21 @@ public class ConsultasController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<ConsultasEntity> visualizarConsulta(@PathVariable Integer id) {
+    public ResponseEntity<ConsultasEntity> buscarConsultaPorId(@PathVariable Integer id) {
         Optional<ConsultasEntity> consulta = consultasService.buscarConsultaPorId(id);
         return consulta.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/paciente/{nomePaciente}")
+    @ResponseBody
+    public List<ConsultasEntity> buscarConsultasPorPaciente(@PathVariable String nomePaciente) {
+        return consultasService.buscarConsultasPorNomePaciente(nomePaciente);
+    }
+
+    @GetMapping("/medico/{nomeMedico}")
+    @ResponseBody
+    public List<ConsultasEntity> buscarConsultasPorMedico(@PathVariable String nomeMedico) {
+        return consultasService.buscarConsultasPorNomeMedico(nomeMedico);
     }
 
     @GetMapping("/all")
