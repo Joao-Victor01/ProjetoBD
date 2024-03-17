@@ -36,7 +36,11 @@ public class ConsultasServiceImpl implements ConsultasService {
 
     @Override
     public void atualizarConsulta(ConsultasEntity consulta) {
-        consultasRepository.atualizarConsulta(consulta);
+        if (verificarDataConsulta(consulta) && verificarDisponibilidadeMedico(consulta)) {
+            consultasRepository.atualizarConsulta(consulta);
+        } else {
+            throw new RuntimeException("Não foi possível atualizar a consulta. Verifique a data ou a disponibilidade do médico.");
+        }
     }
 
     @Override
