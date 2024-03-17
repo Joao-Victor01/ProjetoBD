@@ -17,6 +17,10 @@ public class ConsultasRepository {
     private static String DELETARCONSULTA = "DELETE FROM consultasBD WHERE id_consulta = ?";
     private static String ATUALIZARCONSULTA = "UPDATE consultasBD SET nome_paciente = ?, nome_medico = ?, data_consulta = ?, motivo_consulta = ? WHERE id_consulta = ?";
     private static String LISTARCONSULTAS = "SELECT * FROM consultasBD";
+    private static String BUSCACONSULTAPACIENTE = "SELECT * FROM consultasBD WHERE nome_paciente LIKE ?";
+    private static String BUSCACONSULTAMEDICO = "SELECT * FROM consultasBD WHERE nome_medico LIKE ?";
+
+
 
 
     @Autowired
@@ -34,6 +38,15 @@ public class ConsultasRepository {
         return consultas.stream().findFirst();
     }
 
+    public List<ConsultasEntity> buscarConsultasPorNomePaciente(String nomePaciente) {
+        return jdbcTemplate.query(BUSCACONSULTAPACIENTE, new Object[]{"%" + nomePaciente + "%"}, new BeanPropertyRowMapper<>(ConsultasEntity.class));
+    }
+
+    public List<ConsultasEntity> buscarConsultasPorNomeMedico(String nomeMedico) {
+        return jdbcTemplate.query(BUSCACONSULTAMEDICO, new Object[]{"%" + nomeMedico + "%"}, new BeanPropertyRowMapper<>(ConsultasEntity.class));
+    }
+
+
     public List<ConsultasEntity> listarConsultas (){
         return jdbcTemplate.query(LISTARCONSULTAS, new BeanPropertyRowMapper<>(ConsultasEntity.class));
     }
@@ -46,8 +59,6 @@ public class ConsultasRepository {
            System.out.println("Erro: "+exception);
         }
     }
-
-
     public void deletarConsulta(Integer id) {
         jdbcTemplate.update(DELETARCONSULTA, id);
     }

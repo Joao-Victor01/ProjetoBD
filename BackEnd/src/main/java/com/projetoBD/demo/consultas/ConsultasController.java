@@ -1,5 +1,6 @@
 package com.projetoBD.demo.consultas;
 
+import com.projetoBD.demo.consultas.service.ConsultasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,7 @@ import java.util.Optional;
 public class ConsultasController {
 
     @Autowired
-    private ConsultasRepository consultasRepository;
+    private ConsultasService consultasService;
 
     @PostMapping("/create")
     @ResponseBody
@@ -26,7 +27,7 @@ public class ConsultasController {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         try {
-            consultasRepository.marcarConsulta(consulta);
+            consultasService.marcarConsulta(consulta);
             return ResponseEntity.ok().headers(headers).body("Consulta criada com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
@@ -37,14 +38,14 @@ public class ConsultasController {
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity<ConsultasEntity> visualizarConsulta(@PathVariable Integer id) {
-        Optional<ConsultasEntity> consulta = consultasRepository.buscarConsultaPorId(id);
+        Optional<ConsultasEntity> consulta = consultasService.buscarConsultaPorId(id);
         return consulta.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/all")
     @ResponseBody
     public List<ConsultasEntity> listarConsultas(){
-        return consultasRepository.listarConsultas();
+        return consultasService.listarConsultas();
     }
 
     @PutMapping("/update/{id}")
@@ -52,10 +53,10 @@ public class ConsultasController {
     public ResponseEntity<String> atualizarConsulta(@PathVariable Integer id, @RequestBody ConsultasEntity novaConsulta) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        Optional<ConsultasEntity> consultaExistente = consultasRepository.buscarConsultaPorId(id);
+        Optional<ConsultasEntity> consultaExistente = consultasService.buscarConsultaPorId(id);
         if (consultaExistente.isPresent()) {
             novaConsulta.setIdConsulta(id);
-            consultasRepository.atualizarConsulta(novaConsulta);
+            consultasService.atualizarConsulta(novaConsulta);
             return ResponseEntity.ok().headers(headers).body("Consulta atualizada com sucesso!");
         } else {
 
@@ -66,9 +67,9 @@ public class ConsultasController {
     @DeleteMapping("/delete/{id}")
     @ResponseBody
     public ResponseEntity<String> deletarConsulta(@PathVariable Integer id) {
-        Optional<ConsultasEntity> consultaExistente = consultasRepository.buscarConsultaPorId(id);
+        Optional<ConsultasEntity> consultaExistente = consultasService.buscarConsultaPorId(id);
         if (consultaExistente.isPresent()) {
-            consultasRepository.deletarConsulta(id);
+            consultasService.deletarConsulta(id);
             return ResponseEntity.ok("Consulta deletada com sucesso!");
         } else {
             return ResponseEntity.notFound().build();
