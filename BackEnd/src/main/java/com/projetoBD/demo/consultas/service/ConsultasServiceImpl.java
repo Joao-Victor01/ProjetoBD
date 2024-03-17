@@ -5,17 +5,23 @@ import com.projetoBD.demo.consultas.ConsultasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ConsultasServiceImpl implements ConsultasService {
+
     @Autowired
     private ConsultasRepository consultasRepository;
 
     @Override
     public void marcarConsulta(ConsultasEntity consulta) {
-        consultasRepository.marcarConsulta(consulta);
+        if (verificarDataConsulta(consulta) && verificarDisponibilidadeMedico(consulta)) {
+            consultasRepository.marcarConsulta(consulta);
+        } else {
+            throw new RuntimeException("Não foi possível marcar a consulta. Verifique a data ou a disponibilidade do médico.");
+        }
     }
 
     @Override
@@ -47,4 +53,32 @@ public class ConsultasServiceImpl implements ConsultasService {
     public List<ConsultasEntity> buscarConsultasPorNomeMedico(String nomeMedico) {
         return consultasRepository.buscarConsultasPorNomeMedico(nomeMedico);
     }
+
+    private boolean verificarDataConsulta(ConsultasEntity consulta) {
+        LocalDateTime dataAtual = LocalDateTime.now();
+        LocalDateTime dataConsulta = consulta.getDataConsulta();
+
+        return dataConsulta.isAfter(dataAtual);
+    }
+
+    private boolean verificarDisponibilidadeMedico(ConsultasEntity novaConsulta) {
+        List<ConsultasEntity> consultasDoMedico = consultasRepository.buscarConsultasPorNomeMedico(novaConsulta.getNomeMedico());
+
+        for (ConsultasEntity consultaExistente : consultasDoMedico) {
+            LocalDateTime dataConsultaExistente = consultaExistente.getDataConsulta();
+            LocalDateTime dataNovaConsulta = novaConsulta.getDataConsulta();
+
+            if (dataConsultaExistente.toLocalDate().isEqual(dataNovaConsulta.toLocalDate())
+                    && dataConsultaExistente.toLocalTime().equals(dataNovaConsulta.toLocalTime())) {
+                return false;
+            }
+            //a duracao de cada consulta eh de 1h, entao soh eh possivel marcar uma nova apos 1h
+            if (Math.abs(dataConsultaExistente.getHour() - dataNovaConsulta.getHour()) < 1) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 }
