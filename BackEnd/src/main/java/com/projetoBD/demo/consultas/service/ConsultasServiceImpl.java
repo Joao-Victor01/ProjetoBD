@@ -72,11 +72,18 @@ public class ConsultasServiceImpl implements ConsultasService {
             LocalDateTime dataConsultaExistente = consultaExistente.getDataConsulta();
             LocalDateTime dataNovaConsulta = novaConsulta.getDataConsulta();
 
+            // Se as consultas são iguais (mesmo paciente, médico e data), permite que mantenha a hora de antes
+            if (consultaExistente.equals(novaConsulta)) {
+                continue;
+            }
+
+
             if (dataConsultaExistente.toLocalDate().isEqual(dataNovaConsulta.toLocalDate())
                     && dataConsultaExistente.toLocalTime().equals(dataNovaConsulta.toLocalTime())) {
                 return false;
             }
-            //a duracao de cada consulta eh de 1h, entao soh eh possivel marcar uma nova apos 1h
+
+
             if (Math.abs(dataConsultaExistente.getHour() - dataNovaConsulta.getHour()) < 1) {
                 return false;
             }
