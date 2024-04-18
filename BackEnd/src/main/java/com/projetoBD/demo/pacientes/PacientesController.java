@@ -1,5 +1,6 @@
 package com.projetoBD.demo.pacientes;
 
+import com.projetoBD.demo.consultas.ConsultasEntity;
 import com.projetoBD.demo.pacientes.service.PacientesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -47,17 +48,22 @@ public class PacientesController {
         return pacientesService.buscaPacientePorCpf(cpfPaciente);
     }
 
-    @PutMapping("/atualizar")
-    public ResponseEntity<String> atualizarPaciente(@RequestBody PacientesEntity paciente) {
-        try {
-            pacientesService.atualizarPaciente(paciente);
-            return ResponseEntity.ok("Dados do paciente " + paciente.getNomePaciente() + "atualizados!");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar dados do paciente.");
+    @PutMapping("/atualizar/{cpfPaciente}")
+    public ResponseEntity<String> atualizarPaciente(@PathVariable String cpfPaciente, @RequestBody PacientesEntity pacienteNovo) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        PacientesEntity paciente = pacientesService.buscaPacientePorCpf(cpfPaciente);
+
+        if(paciente != null) {
+            pacienteNovo.setCpfPaciente(cpfPaciente);
+            pacientesService.atualizarPaciente(pacienteNovo);
+            return ResponseEntity.ok().headers(headers).body("Dados do paciente atualizados!");
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
+
 
     @DeleteMapping("/deletar/{cpfPaciente}")
     public ResponseEntity<String> deletarPaciente (@PathVariable String cpfPaciente){

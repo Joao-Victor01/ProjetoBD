@@ -25,21 +25,12 @@ public class PacientesServiceImpl implements PacientesService {
     }
 
     @Override
-    public void atualizarPaciente(PacientesEntity pacienteAtualizado){
-        if (pacienteAtualizado.getDataNascPaciente().isAfter(LocalDate.now())) {
+    public void atualizarPaciente(PacientesEntity paciente){
+        if (paciente.getDataNascPaciente().isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("Data de nascimento inválida!");
+        } else {
+            pacientesRepository.atualizarPaciente(paciente);
         }
-
-        PacientesEntity pacienteAntigo = pacientesRepository.buscarPacientePorCpf(pacienteAtualizado.getCpfPaciente());
-
-        if (pacienteAntigo == null) {
-            throw new IllegalArgumentException("Paciente não encontrado!");
-        }
-
-        pacienteAntigo.setNomePaciente(pacienteAtualizado.getNomePaciente());
-        pacienteAntigo.setDataNascPaciente(pacienteAtualizado.getDataNascPaciente());
-
-        pacientesRepository.atualizarPaciente(pacienteAntigo);
     }
 
     @Override
