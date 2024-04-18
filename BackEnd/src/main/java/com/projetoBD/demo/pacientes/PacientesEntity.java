@@ -11,6 +11,9 @@ public class PacientesEntity {
     private String sexoPaciente;
     private int tipoUsuario = 0;
 
+    public PacientesEntity() {
+    }
+
     public PacientesEntity(String nomePaciente, String cpfPaciente, LocalDate dataNascPaciente, String sexoPaciente, int tipoUsuario) {
         this.nomePaciente = nomePaciente;
         this.cpfPaciente = cpfPaciente;
