@@ -72,7 +72,7 @@ public class ConsultasServiceImpl implements ConsultasService {
             LocalDateTime dataConsultaExistente = consultaExistente.getDataConsulta();
             LocalDateTime dataNovaConsulta = novaConsulta.getDataConsulta();
 
-            // Se as consultas são iguais (mesmo paciente, médico e data), permite que mantenha a hora de antes
+            // Se as consultas sao iguais (mesmo paciente, medico e data), permite que mantenha a hora de antes
             if (consultaExistente.equals(novaConsulta)) {
                 continue;
             }
