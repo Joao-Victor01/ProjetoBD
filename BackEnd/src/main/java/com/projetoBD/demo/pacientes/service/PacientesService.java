@@ -14,7 +14,7 @@ public interface PacientesService {
 
     List<PacientesEntity> buscarPacientesPorNome(String nomePaciente);
 
-    PacientesEntity buscaPacientePorCpf(String cpfPaciente);
+    Optional<PacientesEntity> buscaPacientePorCpf(String cpfPaciente);
 
     List<PacientesEntity> listarTodosPacientes();
 }

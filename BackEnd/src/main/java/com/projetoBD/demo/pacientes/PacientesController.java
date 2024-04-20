@@ -44,22 +44,22 @@ public class PacientesController {
 
     @GetMapping("/buscar/{cpfPaciente}")
     @ResponseBody
-    public PacientesEntity buscarPacientePorCpf (@PathVariable String cpfPaciente){
+    public Optional<PacientesEntity> buscarPacientePorCpf (@PathVariable String cpfPaciente){
         return pacientesService.buscaPacientePorCpf(cpfPaciente);
     }
 
     @PutMapping("/atualizar/{cpfPaciente}")
-    public ResponseEntity<String> atualizarPaciente(@PathVariable String cpfPaciente, @RequestBody PacientesEntity pacienteNovo) {
+    @ResponseBody
+    public ResponseEntity<String> atualizarDadosPaciente(@PathVariable String cpfPaciente, @RequestBody PacientesEntity novoPaciente) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-
-        PacientesEntity paciente = pacientesService.buscaPacientePorCpf(cpfPaciente);
-
-        if(paciente != null) {
-            pacienteNovo.setCpfPaciente(cpfPaciente);
-            pacientesService.atualizarPaciente(pacienteNovo);
-            return ResponseEntity.ok().headers(headers).body("Dados do paciente atualizados!");
+        Optional<PacientesEntity> pacienteExistente = pacientesService.buscaPacientePorCpf(cpfPaciente);
+        if (pacienteExistente.isPresent()) {
+            novoPaciente.setCpfPaciente(cpfPaciente);
+            pacientesService.atualizarPaciente(novoPaciente);
+            return ResponseEntity.ok().headers(headers).body("Dados do paciente atualizados com sucesso!");
         } else {
+
             return ResponseEntity.notFound().build();
         }
     }

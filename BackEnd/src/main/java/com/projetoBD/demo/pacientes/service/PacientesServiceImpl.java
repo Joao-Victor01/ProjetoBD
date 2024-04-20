@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PacientesServiceImpl implements PacientesService {
@@ -44,7 +45,7 @@ public class PacientesServiceImpl implements PacientesService {
     }
 
     @Override
-    public PacientesEntity buscaPacientePorCpf(String cpfPaciente){
+    public Optional<PacientesEntity> buscaPacientePorCpf(String cpfPaciente){
         return pacientesRepository.buscarPacientePorCpf(cpfPaciente);
     }
 

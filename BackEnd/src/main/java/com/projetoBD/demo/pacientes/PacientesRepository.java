@@ -1,5 +1,6 @@
 package com.projetoBD.demo.pacientes;
 
+import com.projetoBD.demo.consultas.ConsultasEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -24,15 +25,13 @@ public class PacientesRepository {
 
     }
 
-    public void atualizarPaciente (PacientesEntity paciente) {
-
+    public void atualizarPaciente(PacientesEntity paciente) {
         String ATUALIZARPACIENTE = "UPDATE pacientes SET nomePaciente = ?, dataNascPaciente = ? WHERE cpfPaciente = ?";
 
-        try{
-            jdbcTemplate.update(ATUALIZARPACIENTE, paciente.getNomePaciente(), paciente.getDataNascPaciente());
-
-        }catch(Exception exception){
-            System.out.println("Erro: "+exception);
+        try {
+            jdbcTemplate.update(ATUALIZARPACIENTE, paciente.getNomePaciente(), paciente.getDataNascPaciente(), paciente.getCpfPaciente());
+        } catch (Exception exception) {
+            System.out.println("Erro: " + exception);
         }
     }
 
@@ -60,11 +59,12 @@ public class PacientesRepository {
         }
     }
 
-    public PacientesEntity buscarPacientePorCpf (String cpfPaciente){
+    public Optional <PacientesEntity> buscarPacientePorCpf (String cpfPaciente){
         String BUSCACPF = "SELECT * FROM pacientes WHERE cpfPaciente = ?";
 
         try {
-            return jdbcTemplate.queryForObject(BUSCACPF, new Object[]{cpfPaciente}, new BeanPropertyRowMapper<>(PacientesEntity.class));
+            List<PacientesEntity> pacientes = jdbcTemplate.query(BUSCACPF, new Object[]{cpfPaciente}, new BeanPropertyRowMapper<>(PacientesEntity.class));
+            return pacientes.stream().findFirst();
         } catch (EmptyResultDataAccessException e) {
             // se nao achar, retorna nulo
             return null;
