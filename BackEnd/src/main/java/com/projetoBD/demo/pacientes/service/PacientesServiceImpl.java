@@ -1,10 +1,13 @@
 package com.projetoBD.demo.pacientes.service;
 
+import com.projetoBD.demo.pacientes.PacienteException;
 import com.projetoBD.demo.pacientes.PacientesEntity;
 import com.projetoBD.demo.pacientes.PacientesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.FileAlreadyExistsException;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +24,10 @@ public class PacientesServiceImpl implements PacientesService {
 
         if (novoPaciente.getDataNascPaciente().isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("Data Inválida!");
+        }
+
+        if (pacientesRepository.buscarPacientePorCpf(novoPaciente.getCpfPaciente()).isPresent()){
+            throw new PacienteException("CPF já cadastrado!");
         }
         pacientesRepository.cadastrarPaciente(novoPaciente);
     }

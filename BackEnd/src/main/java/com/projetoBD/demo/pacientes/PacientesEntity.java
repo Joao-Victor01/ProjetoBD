@@ -1,8 +1,13 @@
 package com.projetoBD.demo.pacientes;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 import java.util.Date;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class PacientesEntity {
 
     private String nomePaciente;
@@ -11,16 +16,7 @@ public class PacientesEntity {
     private String sexoPaciente;
     private int tipoUsuario = 0;
 
-    public PacientesEntity() {
-    }
 
-    public PacientesEntity(String nomePaciente, String cpfPaciente, LocalDate dataNascPaciente, String sexoPaciente, int tipoUsuario) {
-        this.nomePaciente = nomePaciente;
-        this.cpfPaciente = cpfPaciente;
-        this.dataNascPaciente = dataNascPaciente;
-        this.sexoPaciente = sexoPaciente;
-        this.tipoUsuario = tipoUsuario;
-    }
 
     public String getNomePaciente() {
         return nomePaciente;

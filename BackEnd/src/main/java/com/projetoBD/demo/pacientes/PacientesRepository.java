@@ -18,9 +18,9 @@ public class PacientesRepository {
     private JdbcTemplate jdbcTemplate;
     public void cadastrarPaciente (PacientesEntity paciente){
 
-        String CADASTRAPACIENTE = "INSERT INTO pacientes (nomePaciente, cpfPaciente, dataNascPaciente, sexoPaciente, tipoUsuario) VALUES (?, ?, ?, ?, ?)";
+        String CADASTRARPACIENTE = "INSERT INTO pacientes (nomePaciente, cpfPaciente, dataNascPaciente, sexoPaciente, tipoUsuario) VALUES (?, ?, ?, ?, ?)";
 
-        jdbcTemplate.update(CADASTRAPACIENTE, paciente.getNomePaciente(), paciente.getCpfPaciente(),
+        jdbcTemplate.update(CADASTRARPACIENTE, paciente.getNomePaciente(), paciente.getCpfPaciente(),
                 paciente.getDataNascPaciente(), paciente.getSexoPaciente(), paciente.getTipoUsuario());
 
     }
@@ -36,6 +36,8 @@ public class PacientesRepository {
     }
 
     public void deletarPaciente (String cpfPaciente) {
+        //TODO antes de deletar, verificar se tem alguma consulta marcada com o paciente. Se tiver, não permitir deletar
+
         String DELETARPACIENTE = "DELETE FROM pacientes WHERE cpfPaciente = ?";
         jdbcTemplate.update(DELETARPACIENTE, cpfPaciente);
     }
@@ -66,8 +68,8 @@ public class PacientesRepository {
             List<PacientesEntity> pacientes = jdbcTemplate.query(BUSCACPF, new Object[]{cpfPaciente}, new BeanPropertyRowMapper<>(PacientesEntity.class));
             return pacientes.stream().findFirst();
         } catch (EmptyResultDataAccessException e) {
-            // se nao achar, retorna nulo
-            return null;
+            // se nao achar, retorna vazio
+            return Optional.empty();
         }
     }
 
