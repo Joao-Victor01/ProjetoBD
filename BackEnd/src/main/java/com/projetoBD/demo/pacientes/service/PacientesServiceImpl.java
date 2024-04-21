@@ -6,8 +6,6 @@ import com.projetoBD.demo.pacientes.PacientesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.FileAlreadyExistsException;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +41,7 @@ public class PacientesServiceImpl implements PacientesService {
 
     @Override
     public void deletarPaciente(String cpfPaciente){
+        //TODO antes de deletar paciente, verificar se tem consulta marcada. Se tiver, nao deleta
         pacientesRepository.deletarPaciente(cpfPaciente);
     }
 
