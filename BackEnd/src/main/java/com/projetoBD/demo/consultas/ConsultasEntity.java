@@ -1,11 +1,18 @@
 package com.projetoBD.demo.consultas;
 
+import com.projetoBD.demo.medicos.MedicosEntity;
+import com.projetoBD.demo.pacientes.PacientesEntity;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class ConsultasEntity {
     private Integer idConsulta;
-    private String nomePaciente;
-    private String nomeMedico;
+    private PacientesEntity paciente;
+    private MedicosEntity medico;
     private LocalDateTime dataConsulta;
     private String motivoConsulta;
 
@@ -17,20 +24,20 @@ public class ConsultasEntity {
         this.idConsulta = idConsulta;
     }
 
-    public String getNomePaciente() {
-        return nomePaciente;
+    public PacientesEntity getPaciente() {
+        return paciente;
     }
 
-    public void setNomePaciente(String nomePaciente) {
-        this.nomePaciente = nomePaciente;
+    public void setPaciente(PacientesEntity paciente) {
+        this.paciente = paciente;
     }
 
-    public String getNomeMedico() {
-        return nomeMedico;
+    public MedicosEntity getMedico() {
+        return medico;
     }
 
-    public void setNomeMedico(String nomeMedico) {
-        this.nomeMedico = nomeMedico;
+    public void setMedico(MedicosEntity medico) {
+        this.medico = medico;
     }
 
     public LocalDateTime getDataConsulta() {
@@ -48,4 +55,7 @@ public class ConsultasEntity {
     public void setMotivoConsulta(String motivoConsulta) {
         this.motivoConsulta = motivoConsulta;
     }
+
 }
+
+

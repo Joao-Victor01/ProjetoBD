@@ -1,65 +1,75 @@
 package com.projetoBD.demo.consultas;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
-@Repository //o spring entende que essa classe faz acesso ao BD e traduz as excecoes do BD
+@Repository
 public class ConsultasRepository {
 
-    private static String NOVACONSULTA = "INSERT INTO consultasBD (nome_paciente, nome_medico, data_consulta, motivo_consulta) VALUES (?, ?, ?, ?)";
-    private static String BUSCARCONSULTA = "SELECT * FROM consultasBD WHERE id_consulta = ?";
-    private static String DELETARCONSULTA = "DELETE FROM consultasBD WHERE id_consulta = ?";
-    private static String ATUALIZARCONSULTA = "UPDATE consultasBD SET nome_paciente = ?, nome_medico = ?, data_consulta = ?, motivo_consulta = ? WHERE id_consulta = ?";
-    private static String LISTARCONSULTAS = "SELECT * FROM consultasBD";
-    private static String BUSCACONSULTAPACIENTE = "SELECT * FROM consultasBD WHERE nome_paciente LIKE ?";
-    private static String BUSCACONSULTAMEDICO = "SELECT * FROM consultasBD WHERE nome_medico LIKE ?";
+    private final JdbcTemplate jdbcTemplate;
+    private final ConsultaRowMapper consultaRowMapper;
 
-
-
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    public ConsultasRepository(JdbcTemplate jdbcTemplate, ConsultaRowMapper consultaRowMapper) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.consultaRowMapper = consultaRowMapper;
+    }
 
     public void marcarConsulta(ConsultasEntity consulta) {
-        //o metodo update do JDBC serve para scripts SQL de atuailizacao, insercao e delecao
-
-        Timestamp horarioConsulta = Timestamp.valueOf(consulta.getDataConsulta());
-        jdbcTemplate.update(NOVACONSULTA, consulta.getNomePaciente(), consulta.getNomeMedico(), horarioConsulta, consulta.getMotivoConsulta());
+        String MARCARCONSULTA = "INSERT INTO consultas (cpfPaciente, crm, dataConsulta, motivoConsulta) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(MARCARCONSULTA, consulta.getPaciente().getCpfPaciente(),
+                consulta.getMedico().getCrm(), consulta.getDataConsulta(), consulta.getMotivoConsulta());
     }
 
-    public Optional<ConsultasEntity> buscarConsultaPorId(Integer id) {
-        List<ConsultasEntity> consultas = jdbcTemplate.query(BUSCARCONSULTA, new Object[]{id}, new BeanPropertyRowMapper<>(ConsultasEntity.class));
-        return consultas.stream().findFirst();
+    public List<ConsultasEntity> listarTodasConsultas() {
+        String LISTARCONSULTAS = "SELECT * FROM consultas";
+        return jdbcTemplate.query(LISTARCONSULTAS, consultaRowMapper);
     }
 
-    public List<ConsultasEntity> buscarConsultasPorNomePaciente(String nomePaciente) {
-        return jdbcTemplate.query(BUSCACONSULTAPACIENTE, new Object[]{"%" + nomePaciente + "%"}, new BeanPropertyRowMapper<>(ConsultasEntity.class));
-    }
+    public Optional<ConsultasEntity> buscarConsultaPorId(Integer idConsulta){
+        String BUSCARCONSULTAID = "SELECT * FROM consultas WHERE idConsulta = ?";
 
-    public List<ConsultasEntity> buscarConsultasPorNomeMedico(String nomeMedico) {
-        return jdbcTemplate.query(BUSCACONSULTAMEDICO, new Object[]{"%" + nomeMedico + "%"}, new BeanPropertyRowMapper<>(ConsultasEntity.class));
-    }
-
-
-    public List<ConsultasEntity> listarConsultas (){
-        return jdbcTemplate.query(LISTARCONSULTAS, new BeanPropertyRowMapper<>(ConsultasEntity.class));
-    }
-
-    public void atualizarConsulta(ConsultasEntity consulta) {
-       try{
-           jdbcTemplate.update(ATUALIZARCONSULTA, consulta.getNomePaciente(), consulta.getNomeMedico(), consulta.getDataConsulta(), consulta.getMotivoConsulta(), consulta.getIdConsulta());
-
-       }catch(Exception exception){
-           System.out.println("Erro: "+exception);
+        try {
+            List<ConsultasEntity> consulta = jdbcTemplate.query(BUSCARCONSULTAID, new Object[]{idConsulta}, consultaRowMapper);
+            return consulta.stream().findFirst();
+        } catch (EmptyResultDataAccessException e) {
+            // se nao achar, retorna vazio
+            return Optional.empty();
         }
     }
-    public void deletarConsulta(Integer id) {
-        jdbcTemplate.update(DELETARCONSULTA, id);
+
+    public List<ConsultasEntity> listarConsultasPorCrmMedico(String crmMedico) {
+        String CONSULTASCRM = "SELECT * FROM consultas WHERE crm = ?";
+        return jdbcTemplate.query(CONSULTASCRM, consultaRowMapper, crmMedico);
+    }
+
+    public List<ConsultasEntity> listarConsultasPorCpfPaciente(String cpfPaciente) {
+        String CONSULTASCPF = "SELECT * FROM consultas WHERE cpfPaciente = ?";
+        return jdbcTemplate.query(CONSULTASCPF, consultaRowMapper, cpfPaciente);
+    }
+
+    public List<ConsultasEntity> listarConsultasPorNomePaciente(String nomePaciente) {
+        String CONSULTASNOMEPACIENTE = "SELECT c.* FROM consultas c JOIN pacientes p ON c.cpfPaciente = p.cpfPaciente WHERE LOWER(p.nomePaciente) LIKE ?";
+        return jdbcTemplate.query(CONSULTASNOMEPACIENTE, consultaRowMapper, "%" + nomePaciente.toLowerCase(Locale.ROOT) + "%");
+    }
+
+    public List<ConsultasEntity> listarConsultasPorNomeMedico(String nomeMedico) {
+        String CONSULTASNOMEMEDICO = "SELECT c.* FROM consultas c JOIN medicos m ON c.crm = m.crm WHERE LOWER(m.nomeMedico) LIKE ?";
+        return jdbcTemplate.query(CONSULTASNOMEMEDICO, consultaRowMapper, "%" + nomeMedico.toLowerCase(Locale.ROOT) + "%");
+    }
+
+    public List<ConsultasEntity> listarConsultasPorData(LocalDateTime data) {
+        String CONSULTASDATA = "SELECT * FROM consultas WHERE dataConsulta = ?";
+        return jdbcTemplate.query(CONSULTASDATA, consultaRowMapper, data);
+    }
+
+    public void cancelarConsulta(Integer idConsulta) {
+        String DELETARCONSULTA = "DELETE FROM consultas WHERE idConsulta = ?";
+        jdbcTemplate.update(DELETARCONSULTA, idConsulta);
     }
 }

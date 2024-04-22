@@ -37,9 +37,8 @@ public class ConsultasController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<ConsultasEntity> buscarConsultaPorId(@PathVariable Integer id) {
-        Optional<ConsultasEntity> consulta = consultasService.buscarConsultaPorId(id);
-        return consulta.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public Optional<ConsultasEntity> buscarConsultaPorId(@PathVariable Integer id) {
+        return consultasService.buscarConsultaPorId(id);
     }
 
     @GetMapping("/paciente/{nomePaciente}")
@@ -60,21 +59,6 @@ public class ConsultasController {
         return consultasService.listarConsultas();
     }
 
-    @PutMapping("/update/{id}")
-    @ResponseBody
-    public ResponseEntity<String> atualizarConsulta(@PathVariable Integer id, @RequestBody ConsultasEntity novaConsulta) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        Optional<ConsultasEntity> consultaExistente = consultasService.buscarConsultaPorId(id);
-        if (consultaExistente.isPresent()) {
-            novaConsulta.setIdConsulta(id);
-            consultasService.atualizarConsulta(novaConsulta);
-            return ResponseEntity.ok().headers(headers).body("Consulta atualizada com sucesso!");
-        } else {
-
-            return ResponseEntity.notFound().build();
-        }
-    }
 
     @DeleteMapping("/delete/{id}")
     @ResponseBody
