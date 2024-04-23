@@ -2,6 +2,7 @@ package com.projetoBD.demo.consultas;
 
 import com.projetoBD.demo.consultas.service.ConsultasService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,5 +74,32 @@ public class ConsultasController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+//
+//    @GetMapping("/medico/{crmMedico}")
+//    @ResponseBody
+//    public List<ConsultasEntity> buscarConsultasPorCrmMedico(@PathVariable String crmMedico) {
+//        return consultasService.buscarConsultasPorCrmMedico(crmMedico);
+//    }
+//
+//    @GetMapping("/paciente/{cpfPaciente}")
+//    @ResponseBody
+//    public List<ConsultasEntity> buscarConsultasPorCpfPaciente(@PathVariable String cpfPaciente) {
+//        return consultasService.buscarConsultasPorCpfPaciente(cpfPaciente);
+//    }
+//
+//    @GetMapping("/data/{data}")
+//    @ResponseBody
+//    public List<ConsultasEntity> buscarConsultasPorData(@PathVariable String data) {
+//        LocalDateTime dataConsulta = LocalDateTime.parse(data);
+//        return consultasService.buscarConsultasPorData(dataConsulta);
+//    }
+
+    @GetMapping("/horarios-indisponiveis")
+    @ResponseBody
+    public List<LocalTime> buscarHorariosIndisponiveisPorDataEMedico(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate data, @RequestParam String crm) {
+        LocalDateTime inicioDoDia = data.atTime(00, 00, 00);
+        LocalDateTime finalDoDia = data.atTime(23, 59, 59);
+        return consultasService.buscarHorariosIndisponiveisPorDataEMedico(inicioDoDia, finalDoDia, crm);
     }
 }

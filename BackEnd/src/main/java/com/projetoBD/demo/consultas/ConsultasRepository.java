@@ -43,16 +43,6 @@ public class ConsultasRepository {
         }
     }
 
-    public List<ConsultasEntity> listarConsultasPorCrmMedico(String crmMedico) {
-        String CONSULTASCRM = "SELECT * FROM consultas WHERE crm = ?";
-        return jdbcTemplate.query(CONSULTASCRM, consultaRowMapper, crmMedico);
-    }
-
-    public List<ConsultasEntity> listarConsultasPorCpfPaciente(String cpfPaciente) {
-        String CONSULTASCPF = "SELECT * FROM consultas WHERE cpfPaciente = ?";
-        return jdbcTemplate.query(CONSULTASCPF, consultaRowMapper, cpfPaciente);
-    }
-
     public List<ConsultasEntity> listarConsultasPorNomePaciente(String nomePaciente) {
         String CONSULTASNOMEPACIENTE = "SELECT c.* FROM consultas c JOIN pacientes p ON c.cpfPaciente = p.cpfPaciente WHERE LOWER(p.nomePaciente) LIKE ?";
         return jdbcTemplate.query(CONSULTASNOMEPACIENTE, consultaRowMapper, "%" + nomePaciente.toLowerCase(Locale.ROOT) + "%");
@@ -63,13 +53,28 @@ public class ConsultasRepository {
         return jdbcTemplate.query(CONSULTASNOMEMEDICO, consultaRowMapper, "%" + nomeMedico.toLowerCase(Locale.ROOT) + "%");
     }
 
+    public void cancelarConsulta(Integer idConsulta) {
+        String DELETARCONSULTA = "DELETE FROM consultas WHERE idConsulta = ?";
+        jdbcTemplate.update(DELETARCONSULTA, idConsulta);
+    }
+
+    public List<ConsultasEntity> listarConsultasPorCrmMedico(String crmMedico) {
+        String CONSULTASCRM = "SELECT * FROM consultas WHERE crm = ?";
+        return jdbcTemplate.query(CONSULTASCRM, consultaRowMapper, crmMedico);
+    }
+
+    public List<ConsultasEntity> listarConsultasPorCpfPaciente(String cpfPaciente) {
+        String CONSULTASCPF = "SELECT * FROM consultas WHERE cpfPaciente = ?";
+        return jdbcTemplate.query(CONSULTASCPF, consultaRowMapper, cpfPaciente);
+    }
+
     public List<ConsultasEntity> listarConsultasPorData(LocalDateTime data) {
         String CONSULTASDATA = "SELECT * FROM consultas WHERE dataConsulta = ?";
         return jdbcTemplate.query(CONSULTASDATA, consultaRowMapper, data);
     }
 
-    public void cancelarConsulta(Integer idConsulta) {
-        String DELETARCONSULTA = "DELETE FROM consultas WHERE idConsulta = ?";
-        jdbcTemplate.update(DELETARCONSULTA, idConsulta);
+    public List<ConsultasEntity> listarHorariosConsultasMedicos(LocalDateTime inicioDoDia, LocalDateTime finalDoDia, String crm) {
+        String CONSULTAS_DATA_E_MEDICO = "SELECT * FROM consultas WHERE dataConsulta BETWEEN TIMESTAMP(?) AND TIMESTAMP(?) AND crm = ?";
+        return jdbcTemplate.query(CONSULTAS_DATA_E_MEDICO, consultaRowMapper, inicioDoDia, finalDoDia, crm);
     }
 }

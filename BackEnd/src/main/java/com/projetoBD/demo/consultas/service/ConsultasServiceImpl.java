@@ -10,6 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,12 +77,32 @@ public class ConsultasServiceImpl implements ConsultasService {
         return consultasRepository.listarConsultasPorNomeMedico(nomeMedico);
     }
 
+    @Override
+    public List<LocalTime> buscarHorariosIndisponiveisPorDataEMedico(LocalDateTime inicioDoDia, LocalDateTime finalDoDia, String crm) {
+        List<ConsultasEntity> consultasDoMedicoNoDia = consultasRepository.listarHorariosConsultasMedicos(inicioDoDia, finalDoDia, crm);
+
+        if (consultasDoMedicoNoDia.isEmpty()) {
+            // Se não houver consultas marcadas, todos os horários do médico estarão disponíveis
+            return Collections.emptyList();
+        }
+
+        List<LocalTime> horariosIndisponiveis = new ArrayList<>();
+
+        for (ConsultasEntity consultaExistente : consultasDoMedicoNoDia) {
+            LocalDateTime dataConsultaExistente = consultaExistente.getDataConsulta();
+            horariosIndisponiveis.add(dataConsultaExistente.toLocalTime());
+        }
+
+        return horariosIndisponiveis;
+    }
+
     private boolean verificarDataConsulta(ConsultasEntity consulta) {
         LocalDateTime dataAtual = LocalDateTime.now();
         LocalDateTime dataConsulta = consulta.getDataConsulta();
 
         return dataConsulta.isAfter(dataAtual);
     }
+
 
     private boolean verificarDisponibilidadeMedico(ConsultasEntity novaConsulta) {
         List<ConsultasEntity> consultasDoMedico = consultasRepository.listarConsultasPorCrmMedico(novaConsulta.getMedico().getCrm());
