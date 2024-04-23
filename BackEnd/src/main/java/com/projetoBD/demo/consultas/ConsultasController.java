@@ -45,7 +45,7 @@ public class ConsultasController {
         return consultasService.buscarConsultaPorId(id);
     }
 
-    @GetMapping("/paciente/{nomePaciente}")
+    @GetMapping("/listar/paciente/{nomePaciente}")
     @ResponseBody
     public List<ConsultasEntity> buscarConsultasPorPaciente(@PathVariable String nomePaciente) {
         return consultasService.buscarConsultasPorNomePaciente(nomePaciente);
@@ -75,25 +75,28 @@ public class ConsultasController {
             return ResponseEntity.notFound().build();
         }
     }
-//
-//    @GetMapping("/medico/{crmMedico}")
-//    @ResponseBody
-//    public List<ConsultasEntity> buscarConsultasPorCrmMedico(@PathVariable String crmMedico) {
-//        return consultasService.buscarConsultasPorCrmMedico(crmMedico);
-//    }
-//
-//    @GetMapping("/paciente/{cpfPaciente}")
-//    @ResponseBody
-//    public List<ConsultasEntity> buscarConsultasPorCpfPaciente(@PathVariable String cpfPaciente) {
-//        return consultasService.buscarConsultasPorCpfPaciente(cpfPaciente);
-//    }
-//
-//    @GetMapping("/data/{data}")
-//    @ResponseBody
-//    public List<ConsultasEntity> buscarConsultasPorData(@PathVariable String data) {
-//        LocalDateTime dataConsulta = LocalDateTime.parse(data);
-//        return consultasService.buscarConsultasPorData(dataConsulta);
-//    }
+
+    @GetMapping("/medico")
+    @ResponseBody
+    public List<ConsultasEntity> buscarConsultasPorCrmMedico(@RequestParam String crm) {
+        return consultasService.buscarConsultasPorCrmMedico(crm);
+    }
+
+    @GetMapping("/paciente/{cpfPaciente}")
+    @ResponseBody
+    public List<ConsultasEntity> buscarConsultasPorCpfPaciente(@PathVariable String cpfPaciente) {
+        return consultasService.buscarConsultasPorCpfPaciente(cpfPaciente);
+    }
+
+
+    @GetMapping("/data")
+    @ResponseBody
+    public List<ConsultasEntity> buscarConsultasPorData(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
+        LocalDateTime inicioDoDia = data.atStartOfDay();
+        LocalDateTime finalDoDia = data.atTime(23, 59, 59);
+        return consultasService.buscarConsultasPorData(inicioDoDia, finalDoDia);
+    }
+
 
     @GetMapping("/horarios-indisponiveis")
     @ResponseBody

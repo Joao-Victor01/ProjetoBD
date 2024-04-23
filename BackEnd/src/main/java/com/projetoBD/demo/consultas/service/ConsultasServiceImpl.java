@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -75,6 +74,25 @@ public class ConsultasServiceImpl implements ConsultasService {
     @Override
     public List<ConsultasEntity> buscarConsultasPorNomeMedico(String nomeMedico) {
         return consultasRepository.listarConsultasPorNomeMedico(nomeMedico);
+    }
+
+    @Override
+    public List<ConsultasEntity> buscarConsultasPorCrmMedico(String crmMedico) {
+        return consultasRepository.listarConsultasPorCrmMedico(crmMedico);
+    }
+
+    @Override
+    public List<ConsultasEntity> buscarConsultasPorCpfPaciente(String cpfPaciente) {
+        return consultasRepository.listarConsultasPorCpfPaciente(cpfPaciente);
+    }
+
+    @Override
+    public List<ConsultasEntity> buscarConsultasPorData(LocalDateTime inicioDoDia, LocalDateTime finalDoDia) {
+        List<ConsultasEntity> consultas = consultasRepository.listarConsultasPorData(inicioDoDia, finalDoDia);
+        if (consultas.isEmpty()){
+            return Collections.emptyList();
+        }
+        return consultas;
     }
 
     @Override
