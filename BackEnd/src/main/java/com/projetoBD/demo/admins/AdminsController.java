@@ -57,7 +57,7 @@ public class AdminsController {
 
 
     @DeleteMapping("/deletar/{cpfAdmin}")
-    public ResponseEntity<String> deletarPaciente (@PathVariable String cpfAdmin){
+    public ResponseEntity<String> deletarAdmin (@PathVariable String cpfAdmin){
         try {
             adminsService.deletarAdmin(cpfAdmin);
             return  ResponseEntity.ok("Admin deletado da base de dados!");
