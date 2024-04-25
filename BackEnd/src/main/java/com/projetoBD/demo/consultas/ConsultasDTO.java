@@ -8,25 +8,20 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConsultasDTO {
-    private String cpfPaciente;
-    private String crm;
-    private LocalDateTime dataConsulta;
+
     private String motivoConsulta;
+    private LocalDateTime dataConsulta;
+    private String nomePaciente;
+    private String nomeMedico;
 
-    public String getCpfPaciente() {
-        return cpfPaciente;
+
+    // Getters e Setters
+    public String getMotivoConsulta() {
+        return motivoConsulta;
     }
 
-    public void setCpfPaciente(String cpfPaciente) {
-        this.cpfPaciente = cpfPaciente;
-    }
-
-    public String getCrm() {
-        return crm;
-    }
-
-    public void setCrm(String crm) {
-        this.crm = crm;
+    public void setMotivoConsulta(String motivoConsulta) {
+        this.motivoConsulta = motivoConsulta;
     }
 
     public LocalDateTime getDataConsulta() {
@@ -37,11 +32,20 @@ public class ConsultasDTO {
         this.dataConsulta = dataConsulta;
     }
 
-    public String getMotivoConsulta() {
-        return motivoConsulta;
+    public String getNomePaciente() {
+        return nomePaciente;
     }
 
-    public void setMotivoConsulta(String motivoConsulta) {
-        this.motivoConsulta = motivoConsulta;
+    public void setNomePaciente(String nomePaciente) {
+        this.nomePaciente = nomePaciente;
     }
+
+    public String getNomeMedico() {
+        return nomeMedico;
+    }
+
+    public void setNomeMedico(String nomeMedico) {
+        this.nomeMedico = nomeMedico;
+    }
+
 }

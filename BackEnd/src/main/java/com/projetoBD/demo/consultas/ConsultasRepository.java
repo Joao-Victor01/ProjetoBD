@@ -74,7 +74,12 @@ public class ConsultasRepository {
     }
 
     public List<ConsultasEntity> listarHorariosConsultasMedicos(LocalDateTime inicioDoDia, LocalDateTime finalDoDia, String crm) {
-        String CONSULTAS_DATA_E_MEDICO = "SELECT * FROM consultas WHERE dataConsulta BETWEEN TIMESTAMP(?) AND TIMESTAMP(?) AND crm = ?";
-        return jdbcTemplate.query(CONSULTAS_DATA_E_MEDICO, consultaRowMapper, inicioDoDia, finalDoDia, crm);
+        String CONSULTASDATAEMEDICO = "SELECT * FROM consultas WHERE dataConsulta BETWEEN TIMESTAMP(?) AND TIMESTAMP(?) AND crm = ?";
+        return jdbcTemplate.query(CONSULTASDATAEMEDICO, consultaRowMapper, inicioDoDia, finalDoDia, crm);
+    }
+
+    public List<ConsultasEntity> listarConsultasPacienteDia(LocalDateTime inicioDoDia, LocalDateTime finalDoDia, String cpf) {
+        String CONSULTASDATAEPACIENTE = "SELECT * FROM consultas WHERE dataConsulta BETWEEN TIMESTAMP(?) AND TIMESTAMP(?) AND cpfPaciente = ?";
+        return jdbcTemplate.query(CONSULTASDATAEPACIENTE, consultaRowMapper, inicioDoDia, finalDoDia, cpf);
     }
 }

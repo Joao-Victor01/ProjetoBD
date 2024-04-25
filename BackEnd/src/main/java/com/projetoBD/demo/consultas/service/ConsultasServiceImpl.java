@@ -114,6 +114,34 @@ public class ConsultasServiceImpl implements ConsultasService {
         return horariosIndisponiveis;
     }
 
+    @Override
+    public List<ConsultasEntity> consultasPacienteDia(LocalDateTime inicioDoDia,
+                                                      LocalDateTime finalDoDia, String cpf){
+
+        List<ConsultasEntity> consultasPaciente =
+                consultasRepository.listarConsultasPacienteDia(inicioDoDia, finalDoDia, cpf);
+
+        if(consultasPaciente.isEmpty()){
+            return Collections.emptyList();
+        }
+
+        return consultasPaciente;
+    }
+
+    @Override
+    public List<ConsultasEntity> consultasMedicoDia(LocalDateTime inicioDoDia,
+                                                    LocalDateTime finalDoDia, String crm){
+
+        List<ConsultasEntity> consultasMedico =
+                consultasRepository.listarHorariosConsultasMedicos(inicioDoDia, finalDoDia, crm);
+
+        if(consultasMedico.isEmpty()){
+            return Collections.emptyList();
+        }
+
+        return consultasMedico;
+    }
+
     private boolean verificarDataConsulta(ConsultasEntity consulta) {
         LocalDateTime dataAtual = LocalDateTime.now();
         LocalDateTime dataConsulta = consulta.getDataConsulta();

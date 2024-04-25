@@ -41,7 +41,7 @@ public class ConsultasController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public Optional<ConsultasEntity> buscarConsultaPorId(@PathVariable Integer id) {
+        public Optional<ConsultasEntity> buscarConsultaPorId(@PathVariable Integer id) {
         return consultasService.buscarConsultaPorId(id);
     }
 
@@ -104,5 +104,23 @@ public class ConsultasController {
         LocalDateTime inicioDoDia = data.atTime(00, 00, 00);
         LocalDateTime finalDoDia = data.atTime(23, 59, 59);
         return consultasService.buscarHorariosIndisponiveisPorDataEMedico(inicioDoDia, finalDoDia, crm);
+    }
+
+    @GetMapping("/paciente/dia")
+    @ResponseBody
+    public List<ConsultasEntity> buscarConsultasPacienteDia(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate data,
+                                                            @RequestParam String cpfPaciente) {
+        LocalDateTime inicioDoDia = data.atTime(00, 00, 00);
+        LocalDateTime finalDoDia = data.atTime(23, 59, 59);
+        return consultasService.consultasPacienteDia(inicioDoDia, finalDoDia, cpfPaciente);
+    }
+
+    @GetMapping("/medico/dia")
+    @ResponseBody
+    public List<ConsultasEntity> buscarConsultasMedicoDia(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate data,
+                                                          @RequestParam String crm) {
+        LocalDateTime inicioDoDia = data.atTime(00, 00, 00);
+        LocalDateTime finalDoDia = data.atTime(23, 59, 59);
+        return consultasService.consultasMedicoDia(inicioDoDia, finalDoDia, crm);
     }
 }
