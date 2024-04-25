@@ -1,6 +1,8 @@
 package com.projetoBD.demo.consultas;
 
 import com.projetoBD.demo.consultas.service.ConsultasService;
+import com.projetoBD.demo.util.ExcelGeneratorUtil;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +13,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -122,5 +128,20 @@ public class ConsultasController {
         LocalDateTime inicioDoDia = data.atTime(00, 00, 00);
         LocalDateTime finalDoDia = data.atTime(23, 59, 59);
         return consultasService.consultasMedicoDia(inicioDoDia, finalDoDia, crm);
+    }
+
+    @GetMapping("/exportar-tabela")
+    public void exportIntoExcelFile(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String dataAtual = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=consultas_"+dataAtual+".xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        List <ConsultasEntity> listaConsultas = consultasService.listarConsultas();
+        ExcelGeneratorUtil generator = new ExcelGeneratorUtil(listaConsultas);
+        generator.generateExcelFile(response);
     }
 }
