@@ -1,6 +1,8 @@
 package com.projetoBD.demo.consultas;
 
 import com.projetoBD.demo.consultas.service.ConsultasService;
+import com.projetoBD.demo.medicos.MedicosEntity;
+import com.projetoBD.demo.medicos.service.MedicosService;
 import com.projetoBD.demo.util.ExcelGeneratorUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public class ConsultasController {
 
     @Autowired
     private ConsultasService consultasService;
+
+    @Autowired
+    private MedicosService medicosService;
 
     @PostMapping("/create")
     @ResponseBody
@@ -131,16 +136,39 @@ public class ConsultasController {
     }
 
     @GetMapping("/exportar-tabela")
-    public void exportIntoExcelFile(HttpServletResponse response) throws IOException {
+    public void exportarTabelaConsultas (HttpServletResponse response) throws IOException {
         response.setContentType("application/octet-stream");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
         String dataAtual = dateFormatter.format(new Date());
 
         String headerKey = "Content-Disposition";
-        String headerValue = "attachment; filename=consultas_"+dataAtual+".xlsx";
+        String headerValue = "attachment; filename=consultas.xlsx";
         response.setHeader(headerKey, headerValue);
 
         List <ConsultasEntity> listaConsultas = consultasService.listarConsultas();
+        ExcelGeneratorUtil generator = new ExcelGeneratorUtil(listaConsultas);
+        generator.generateExcelFile(response);
+    }
+
+    @GetMapping("/medico/exportar-tabela")
+    public void exportarTabelaConsultasMedico(HttpServletResponse response,
+                                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataInicio,
+                                              @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataFim,
+                                              @RequestParam String crm) throws IOException
+    {
+        response.setContentType("application/octet-stream");
+
+        Optional<MedicosEntity> medico = medicosService.buscarMedicoPorCrm(crm);
+        String nomeMedico = medico.get().getNomeMedico();
+
+        LocalDateTime dataInicial = dataInicio.atTime(00, 00, 00);
+        LocalDateTime dataFinal = dataFim.atTime(23, 59, 59);
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=consultas_medico.xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        List <ConsultasEntity> listaConsultas = consultasService.consultasMedicoDia(dataInicial, dataFinal, crm);
         ExcelGeneratorUtil generator = new ExcelGeneratorUtil(listaConsultas);
         generator.generateExcelFile(response);
     }

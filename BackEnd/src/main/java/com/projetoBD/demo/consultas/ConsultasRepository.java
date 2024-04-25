@@ -73,7 +73,7 @@ public class ConsultasRepository {
         return jdbcTemplate.query(CONSULTASDATA, consultaRowMapper, inicioDoDia, finalDoDia);
     }
 
-    public List<ConsultasEntity> listarHorariosConsultasMedicos(LocalDateTime inicioDoDia, LocalDateTime finalDoDia, String crm) {
+    public List<ConsultasEntity> listarConsultasMedicosData(LocalDateTime inicioDoDia, LocalDateTime finalDoDia, String crm) {
         String CONSULTASDATAEMEDICO = "SELECT * FROM consultas WHERE dataConsulta BETWEEN TIMESTAMP(?) AND TIMESTAMP(?) AND crm = ?";
         return jdbcTemplate.query(CONSULTASDATAEMEDICO, consultaRowMapper, inicioDoDia, finalDoDia, crm);
     }

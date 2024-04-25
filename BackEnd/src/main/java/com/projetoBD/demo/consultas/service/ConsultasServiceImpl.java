@@ -97,7 +97,7 @@ public class ConsultasServiceImpl implements ConsultasService {
 
     @Override
     public List<LocalTime> buscarHorariosIndisponiveisPorDataEMedico(LocalDateTime inicioDoDia, LocalDateTime finalDoDia, String crm) {
-        List<ConsultasEntity> consultasDoMedicoNoDia = consultasRepository.listarHorariosConsultasMedicos(inicioDoDia, finalDoDia, crm);
+        List<ConsultasEntity> consultasDoMedicoNoDia = consultasRepository.listarConsultasMedicosData(inicioDoDia, finalDoDia, crm);
 
         if (consultasDoMedicoNoDia.isEmpty()) {
             // Se não houver consultas marcadas, todos os horários do médico estarão disponíveis
@@ -133,7 +133,7 @@ public class ConsultasServiceImpl implements ConsultasService {
                                                     LocalDateTime finalDoDia, String crm){
 
         List<ConsultasEntity> consultasMedico =
-                consultasRepository.listarHorariosConsultasMedicos(inicioDoDia, finalDoDia, crm);
+                consultasRepository.listarConsultasMedicosData(inicioDoDia, finalDoDia, crm);
 
         if(consultasMedico.isEmpty()){
             return Collections.emptyList();
@@ -170,7 +170,7 @@ public class ConsultasServiceImpl implements ConsultasService {
             }
 
 
-            if (Math.abs(dataConsultaExistente.getHour() - dataNovaConsulta.getHour()) < 1) {
+            if ((dataConsultaExistente.isEqual(dataNovaConsulta)) &&(Math.abs(dataConsultaExistente.getHour() - dataNovaConsulta.getHour()) < 1)) {
                 return false;
             }
         }
