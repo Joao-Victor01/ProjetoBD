@@ -21,9 +21,9 @@ public class ConsultasRepository {
     }
 
     public void marcarConsulta(ConsultasEntity consulta) {
-        String MARCARCONSULTA = "INSERT INTO consultas (cpfPaciente, crm, dataConsulta, motivoConsulta) VALUES (?, ?, ?, ?)";
+        String MARCARCONSULTA = "INSERT INTO consultas (cpfPaciente, crm, dataConsulta, motivoConsulta, valorConsulta) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(MARCARCONSULTA, consulta.getPaciente().getCpfPaciente(),
-                consulta.getMedico().getCrm(), consulta.getDataConsulta(), consulta.getMotivoConsulta());
+                consulta.getMedico().getCrm(), consulta.getDataConsulta(), consulta.getMotivoConsulta(), consulta.getValorConsulta());
     }
 
     public List<ConsultasEntity> listarTodasConsultas() {

@@ -30,6 +30,7 @@ public class ConsultaRowMapper implements RowMapper<ConsultasEntity> {
         consulta.setIdConsulta(rs.getInt("idConsulta"));
         consulta.setDataConsulta(rs.getObject("dataConsulta", LocalDateTime.class));
         consulta.setMotivoConsulta(rs.getString("motivoConsulta"));
+        consulta.setValorConsulta(rs.getInt("valorConsulta"));
 
         // Mapeia o paciente
         PacientesEntity paciente = pacientesRepository.buscarPacientePorCpf(rs.getString("cpfPaciente")).orElse(null);

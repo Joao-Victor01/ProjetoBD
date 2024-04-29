@@ -2,7 +2,6 @@ package com.projetoBD.demo.pacientes;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
@@ -15,6 +14,7 @@ public class PacientesEntity {
     private LocalDate dataNascPaciente;
     private String sexoPaciente;
     private int tipoUsuario = 0;
+    private boolean flamengo, onepiece, souza;
 
 
 
@@ -54,4 +54,27 @@ public class PacientesEntity {
         return tipoUsuario;
     }
 
+    public boolean isFlamengo() {
+        return flamengo;
+    }
+
+    public void setFlamengo(boolean flamengo) {
+        this.flamengo = flamengo;
+    }
+
+    public boolean isOnepiece() {
+        return onepiece;
+    }
+
+    public void setOnepiece(boolean onepiece) {
+        this.onepiece = onepiece;
+    }
+
+    public boolean isSouza() {
+        return souza;
+    }
+
+    public void setSouza(boolean souza) {
+        this.souza = souza;
+    }
 }

@@ -2,6 +2,7 @@ package com.projetoBD.demo.consultas.service;
 
 import com.projetoBD.demo.consultas.ConsultasEntity;
 import com.projetoBD.demo.consultas.ConsultasRepository;
+import com.projetoBD.demo.descontos.service.DescontosService;
 import com.projetoBD.demo.medicos.MedicosEntity;
 import com.projetoBD.demo.medicos.service.MedicosService;
 import com.projetoBD.demo.pacientes.PacientesEntity;
@@ -28,6 +29,9 @@ public class ConsultasServiceImpl implements ConsultasService {
     @Autowired
     private MedicosService medicosService;
 
+    @Autowired
+    private DescontosService descontosService;
+
     @Override
     public void marcarConsulta(ConsultasEntity consulta) {
         // Validar se o DTO é nulo ou se os campos obrigatórios estão vazios
@@ -44,6 +48,8 @@ public class ConsultasServiceImpl implements ConsultasService {
         MedicosEntity medico = optionalMedico.orElseThrow(() -> new RuntimeException("Médico não encontrado com o CRM fornecido."));
 
         if (verificarDataConsulta(consulta) && verificarDisponibilidadeMedico(consulta)) {
+            Integer valorConsulta = aplicaDesconto(consulta);
+            consulta.setValorConsulta(valorConsulta);
             consultasRepository.marcarConsulta(consulta);
         } else {
             throw new RuntimeException("Não foi possível marcar a consulta. Verifique a data ou a disponibilidade do médico.");
@@ -142,6 +148,22 @@ public class ConsultasServiceImpl implements ConsultasService {
         return consultasMedico;
     }
 
+    private Integer aplicaDesconto(ConsultasEntity consulta) {
+        Integer valorConsulta = ConsultasEntity.getValorPadrao();
+
+        if (descontosService.descontoFlamengo(consulta.getPaciente().getCpfPaciente())) {
+            valorConsulta -= ConsultasEntity.getDescontoFlamengo();
+        }
+        if (descontosService.descontoSouza(consulta.getPaciente().getCpfPaciente())) {
+            valorConsulta -= ConsultasEntity.getDescontoSouza();
+        }
+        if (descontosService.descontoOnePiece(consulta.getPaciente().getCpfPaciente())) {
+            valorConsulta -= ConsultasEntity.getDescontoOnePiece();
+        }
+
+        return valorConsulta;
+    }
+
     private boolean verificarDataConsulta(ConsultasEntity consulta) {
         LocalDateTime dataAtual = LocalDateTime.now();
         LocalDateTime dataConsulta = consulta.getDataConsulta();
@@ -157,25 +179,27 @@ public class ConsultasServiceImpl implements ConsultasService {
             LocalDateTime dataConsultaExistente = consultaExistente.getDataConsulta();
             LocalDateTime dataNovaConsulta = novaConsulta.getDataConsulta();
 
-            // Se as consultas sao iguais (mesmo paciente, medico e data), permite que mantenha a hora de antes
-            //para atualizacao de consulta
+            // Se as consultas são iguais (mesmo paciente, medico e data), permite que mantenha a hora de antes
+            // para atualizacao de consulta
             if (consultaExistente.equals(novaConsulta)) {
                 continue;
             }
-
 
             if (dataConsultaExistente.toLocalDate().isEqual(dataNovaConsulta.toLocalDate())
                     && dataConsultaExistente.toLocalTime().equals(dataNovaConsulta.toLocalTime())) {
                 return false;
             }
 
-
-            if ((dataConsultaExistente.isEqual(dataNovaConsulta)) &&(Math.abs(dataConsultaExistente.getHour() - dataNovaConsulta.getHour()) < 1)) {
+            // Verifica se a diferença entre as horas é menor que 30 minutos
+            if (dataConsultaExistente.isEqual(dataNovaConsulta)
+                    && Math.abs(dataConsultaExistente.getHour() - dataNovaConsulta.getHour()) < 1
+                    && Math.abs(dataConsultaExistente.getMinute() - dataNovaConsulta.getMinute()) < 30) {
                 return false;
             }
         }
 
         return true;
     }
+
 
 }

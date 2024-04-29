@@ -2,7 +2,6 @@ package com.projetoBD.demo.medicos;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 

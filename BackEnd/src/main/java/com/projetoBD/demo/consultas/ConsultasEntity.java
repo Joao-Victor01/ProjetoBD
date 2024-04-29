@@ -15,6 +15,12 @@ public class ConsultasEntity {
     private MedicosEntity medico;
     private LocalDateTime dataConsulta;
     private String motivoConsulta;
+    private Integer valorConsulta;
+
+    private static final Integer valorPadrao = 100;
+    private static final Integer descontoSouza = 5;
+    private static final Integer descontoFlamengo = 5;
+    private static final Integer descontoOnePiece = 5;
 
     public Integer getIdConsulta() {
         return idConsulta;
@@ -56,6 +62,31 @@ public class ConsultasEntity {
         this.motivoConsulta = motivoConsulta;
     }
 
+    public Integer getValorConsulta() {
+        return valorConsulta;
+    }
+
+    public void setValorConsulta(Integer valorConsulta) {
+        this.valorConsulta = valorConsulta;
+    }
+
+
+
+    public static Integer getValorPadrao() {
+        return valorPadrao;
+    }
+
+    public static Integer getDescontoSouza() {
+        return descontoSouza;
+    }
+
+    public static Integer getDescontoFlamengo() {
+        return descontoFlamengo;
+    }
+
+    public static Integer getDescontoOnePiece() {
+        return descontoOnePiece;
+    }
 }
 
 

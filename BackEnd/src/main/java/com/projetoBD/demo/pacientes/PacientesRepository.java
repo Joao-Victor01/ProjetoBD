@@ -17,10 +17,12 @@ public class PacientesRepository {
     private JdbcTemplate jdbcTemplate;
     public void cadastrarPaciente (PacientesEntity paciente){
 
-        String CADASTRARPACIENTE = "INSERT INTO pacientes (nomePaciente, cpfPaciente, dataNascPaciente, sexoPaciente, tipoUsuario) VALUES (?, ?, ?, ?, ?)";
+        String CADASTRARPACIENTE = "INSERT INTO pacientes (nomePaciente, cpfPaciente, " +
+                "dataNascPaciente, sexoPaciente, flamengo, souza, onepiece, tipoUsuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(CADASTRARPACIENTE, paciente.getNomePaciente(), paciente.getCpfPaciente(),
-                paciente.getDataNascPaciente(), paciente.getSexoPaciente(), paciente.getTipoUsuario());
+                paciente.getDataNascPaciente(), paciente.getSexoPaciente(), paciente.isFlamengo(),
+                paciente.isSouza(), paciente.isOnepiece(), paciente.getTipoUsuario());
 
     }
 
