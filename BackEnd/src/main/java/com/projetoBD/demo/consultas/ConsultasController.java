@@ -164,8 +164,7 @@ public class ConsultasController {
     {
         response.setContentType("application/octet-stream");
 
-        Optional<MedicosEntity> medico = medicosService.buscarMedicoPorCrm(crm);
-        String nomeMedico = medico.get().getNomeMedico();
+
 
         LocalDateTime dataInicial = dataInicio.atTime(00, 00, 00);
         LocalDateTime dataFinal = dataFim.atTime(23, 59, 59);
