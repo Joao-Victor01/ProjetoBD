@@ -135,6 +135,12 @@ public class ConsultasController {
         return consultasService.consultasMedicoDia(inicioDoDia, finalDoDia, crm);
     }
 
+    @GetMapping("/paciente-medico")
+    @ResponseBody
+    public List<ConsultasEntity> buscarConsultasPacienteMedico (@RequestParam String cpfPaciente, @RequestParam String crm){
+        return consultasService.buscarConsultasPacienteMedico(cpfPaciente, crm);
+    }
+
     @GetMapping("/exportar-tabela")
     public void exportarTabelaConsultas (HttpServletResponse response) throws IOException {
         response.setContentType("application/octet-stream");

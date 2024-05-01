@@ -21,7 +21,6 @@ import java.util.Optional;
 public class ConsultasServiceImpl implements ConsultasService {
 
     //TODO filtro que recebe o nome do paciente e o crm. Retorna as consultas
-    //TODO adicionar a data e o valor da consulta no arquivo excel exportado
 
     @Autowired
     private ConsultasRepository consultasRepository;
@@ -62,12 +61,18 @@ public class ConsultasServiceImpl implements ConsultasService {
 
     @Override
     public Optional<ConsultasEntity> buscarConsultaPorId(Integer id) {
+
         return consultasRepository.buscarConsultaPorId(id);
     }
 
     @Override
     public List<ConsultasEntity> listarConsultas() {
-        return consultasRepository.listarTodasConsultas();
+        List<ConsultasEntity> consultas = consultasRepository.listarTodasConsultas();
+        if(consultas.isEmpty()){
+            return Collections.emptyList();
+        }
+
+        return consultas;
     }
 
     @Override
@@ -77,28 +82,53 @@ public class ConsultasServiceImpl implements ConsultasService {
 
     @Override
     public List<ConsultasEntity> buscarConsultasPorNomePaciente(String nomePaciente) {
-        return consultasRepository.listarConsultasPorNomePaciente(nomePaciente);
+        List<ConsultasEntity> consultas = consultasRepository.listarConsultasPorNomePaciente(nomePaciente);
+        if(consultas.isEmpty()){
+            return Collections.emptyList();
+        }
+        return consultas;
     }
 
     @Override
     public List<ConsultasEntity> buscarConsultasPorNomeMedico(String nomeMedico) {
-        return consultasRepository.listarConsultasPorNomeMedico(nomeMedico);
+        List<ConsultasEntity> consultas = consultasRepository.listarConsultasPorNomeMedico(nomeMedico);
+        if(consultas.isEmpty()){
+            return Collections.emptyList();
+        }
+        return consultas;
     }
 
     @Override
     public List<ConsultasEntity> buscarConsultasPorCrmMedico(String crmMedico) {
-        return consultasRepository.listarConsultasPorCrmMedico(crmMedico);
+        List<ConsultasEntity> consultas = consultasRepository.listarConsultasPorCrmMedico(crmMedico);
+        if(consultas.isEmpty()){
+            return Collections.emptyList();
+        }
+        return consultas;
     }
 
     @Override
     public List<ConsultasEntity> buscarConsultasPorCpfPaciente(String cpfPaciente) {
-        return consultasRepository.listarConsultasPorCpfPaciente(cpfPaciente);
+        List<ConsultasEntity> consultas = consultasRepository.listarConsultasPorCpfPaciente(cpfPaciente);
+        if(consultas.isEmpty()){
+            return Collections.emptyList();
+        }
+        return consultas;
     }
 
     @Override
     public List<ConsultasEntity> buscarConsultasPorData(LocalDateTime inicioDoDia, LocalDateTime finalDoDia) {
         List<ConsultasEntity> consultas = consultasRepository.listarConsultasPorData(inicioDoDia, finalDoDia);
         if (consultas.isEmpty()){
+            return Collections.emptyList();
+        }
+        return consultas;
+    }
+
+    @Override
+    public List<ConsultasEntity> buscarConsultasPacienteMedico(String cpfPaciente, String crm){
+        List<ConsultasEntity> consultas = consultasRepository.listarConsultasPacienteMedico(cpfPaciente, crm);
+        if(consultas.isEmpty()){
             return Collections.emptyList();
         }
         return consultas;

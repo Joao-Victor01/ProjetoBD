@@ -82,4 +82,9 @@ public class ConsultasRepository {
         String CONSULTASDATAEPACIENTE = "SELECT * FROM consultas WHERE dataConsulta BETWEEN TIMESTAMP(?) AND TIMESTAMP(?) AND cpfPaciente = ?";
         return jdbcTemplate.query(CONSULTASDATAEPACIENTE, consultaRowMapper, inicioDoDia, finalDoDia, cpf);
     }
+
+    public List<ConsultasEntity> listarConsultasPacienteMedico(String cpfPaciente, String crm) {
+        String CONSULTASCPFCRM = "SELECT * FROM consultas WHERE cpfPaciente = ? AND crm = ?";
+        return jdbcTemplate.query(CONSULTASCPFCRM, consultaRowMapper, cpfPaciente, crm);
+    }
 }

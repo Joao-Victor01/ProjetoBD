@@ -29,6 +29,8 @@ public interface ConsultasService {
 
     List<ConsultasEntity> buscarConsultasPorData(LocalDateTime inicioDoDia, LocalDateTime finalDoDia);
 
+    List<ConsultasEntity> buscarConsultasPacienteMedico(String cpfPaciente, String crm);
+
     List<LocalTime> buscarHorariosIndisponiveisPorDataEMedico(LocalDateTime inicioDoDia, LocalDateTime finalDoDia, String crm);
 
     List<ConsultasEntity> consultasPacienteDia(LocalDateTime inicioDoDia,
