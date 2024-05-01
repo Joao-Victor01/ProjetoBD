@@ -60,6 +60,7 @@ public class ExcelGeneratorUtil {
         XSSFFont font = workbook.createFont();
         font.setFontHeight(14);
         style.setFont(font);
+
         for (ConsultasEntity consulta : consultas) {
             Row row = sheet.createRow(rowCount++);
             int columnCount = 0;
@@ -68,7 +69,7 @@ public class ExcelGeneratorUtil {
             createCell(row, columnCount++, consulta.getPaciente().getNomePaciente(), style);
             createCell(row, columnCount++, consulta.getDataConsulta().toString(), style); // Converte LocalDateTime para String
             createCell(row, columnCount++, consulta.getMotivoConsulta(), style);
-            createCell(row, columnCount++, consulta.getValorConsulta(), style);
+            createCell(row, columnCount++, "R$ " + consulta.getValorConsulta(), style);
         }
     }
     public void generateExcelFile(HttpServletResponse response) throws IOException {
