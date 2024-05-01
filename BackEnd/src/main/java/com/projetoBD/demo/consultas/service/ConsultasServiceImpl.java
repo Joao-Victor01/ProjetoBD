@@ -10,6 +10,7 @@ import com.projetoBD.demo.pacientes.service.PacientesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -39,6 +40,10 @@ public class ConsultasServiceImpl implements ConsultasService {
         // Validar se o DTO é nulo ou se os campos obrigatórios estão vazios
         if (consulta == null || consulta.getPaciente().getCpfPaciente() == null || consulta.getMedico().getCrm() == null) {
             throw new IllegalArgumentException("Dados da consulta incompletos.");
+        }
+
+        if (verificarDiaFimDeSemana(consulta.getDataConsulta())) {
+            throw new RuntimeException("Não é permitido marcar consulta aos sábados ou domingos.");
         }
 
         // Buscar o paciente pelo CPF
@@ -202,6 +207,14 @@ public class ConsultasServiceImpl implements ConsultasService {
         LocalDateTime dataConsulta = consulta.getDataConsulta();
 
         return dataConsulta.isAfter(dataAtual);
+    }
+
+    private boolean verificarDiaFimDeSemana(LocalDateTime dataConsulta) {
+        // Obtém o dia da semana da data da consulta
+        DayOfWeek diaDaSemana = dataConsulta.getDayOfWeek();
+
+        // Verifica se é sábado ou domingo
+        return diaDaSemana == DayOfWeek.SATURDAY || diaDaSemana == DayOfWeek.SUNDAY;
     }
 
 
