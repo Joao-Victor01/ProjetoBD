@@ -20,6 +20,9 @@ import java.util.Optional;
 @Service
 public class ConsultasServiceImpl implements ConsultasService {
 
+    //TODO filtro que recebe o nome do paciente e o crm. Retorna as consultas
+    //TODO adicionar a data e o valor da consulta no arquivo excel exportado
+
     @Autowired
     private ConsultasRepository consultasRepository;
 

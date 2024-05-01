@@ -26,7 +26,7 @@ public class ExcelGeneratorUtil {
     }
 
     private void writeHeader() {
-        sheet = workbook.createSheet("Student");
+        sheet = workbook.createSheet("Consultas");
         Row row = sheet.createRow(0);
         CellStyle style = workbook.createCellStyle();
         XSSFFont font = workbook.createFont();
@@ -36,7 +36,9 @@ public class ExcelGeneratorUtil {
         createCell(row, 0, "ID da Consulta", style);
         createCell(row, 1, "Nome do Médico", style);
         createCell(row, 2, "Nome do Paciente", style);
-        createCell(row, 3, "Tipo de Consulta", style);
+        createCell(row, 3, "Data e Hora da Consulta", style);
+        createCell(row, 4, "Tipo da Consulta", style);
+        createCell(row, 5, "Valor da Consulta", style);
     }
     private void createCell(Row row, int columnCount, Object valueOfCell, CellStyle style) {
         sheet.autoSizeColumn(columnCount);
@@ -58,14 +60,15 @@ public class ExcelGeneratorUtil {
         XSSFFont font = workbook.createFont();
         font.setFontHeight(14);
         style.setFont(font);
-        for (ConsultasEntity consultasEntity: consultas) {
+        for (ConsultasEntity consulta : consultas) {
             Row row = sheet.createRow(rowCount++);
             int columnCount = 0;
-            createCell(row, columnCount++, consultasEntity.getIdConsulta(), style);
-            createCell(row, columnCount++, consultasEntity.getMedico().getNomeMedico(), style);
-            createCell(row, columnCount++, consultasEntity.getPaciente().getNomePaciente(), style);
-            //createCell(row, columnCount++, consultasEntity.getDataConsulta(), style);
-            createCell(row, columnCount++, consultasEntity.getMotivoConsulta(), style);
+            createCell(row, columnCount++, consulta.getIdConsulta(), style);
+            createCell(row, columnCount++, consulta.getMedico().getNomeMedico(), style);
+            createCell(row, columnCount++, consulta.getPaciente().getNomePaciente(), style);
+            createCell(row, columnCount++, consulta.getDataConsulta().toString(), style); // Converte LocalDateTime para String
+            createCell(row, columnCount++, consulta.getMotivoConsulta(), style);
+            createCell(row, columnCount++, consulta.getValorConsulta(), style);
         }
     }
     public void generateExcelFile(HttpServletResponse response) throws IOException {
