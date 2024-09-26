@@ -46,7 +46,7 @@ public class ConsultasController {
             return ResponseEntity.ok().headers(headers).body("Consulta criada com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(500).headers(headers).body("Erro ao criar consulta.");
+            return ResponseEntity.status(500).headers(headers).body(e.getMessage());
         }
     }
 

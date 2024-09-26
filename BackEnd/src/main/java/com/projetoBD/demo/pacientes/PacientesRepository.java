@@ -17,7 +17,7 @@ public class PacientesRepository {
     private JdbcTemplate jdbcTemplate;
     public void cadastrarPaciente (PacientesEntity paciente){
 
-        String CADASTRARPACIENTE = "INSERT INTO pacientes (nomePaciente, cpfPaciente, " +
+        String CADASTRARPACIENTE = "INSERT INTO Pacientes (nomePaciente, cpfPaciente, " +
                 "dataNascPaciente, sexoPaciente, flamengo, souza, onepiece, tipoUsuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(CADASTRARPACIENTE, paciente.getNomePaciente(), paciente.getCpfPaciente(),
@@ -27,7 +27,7 @@ public class PacientesRepository {
     }
 
     public void atualizarPaciente(PacientesEntity paciente) {
-        String ATUALIZARPACIENTE = "UPDATE pacientes SET nomePaciente = ?, dataNascPaciente = ? WHERE cpfPaciente = ?";
+        String ATUALIZARPACIENTE = "UPDATE Pacientes SET nomePaciente = ?, dataNascPaciente = ? WHERE cpfPaciente = ?";
 
         try {
             jdbcTemplate.update(ATUALIZARPACIENTE, paciente.getNomePaciente(), paciente.getDataNascPaciente(), paciente.getCpfPaciente());
@@ -39,12 +39,12 @@ public class PacientesRepository {
     public void deletarPaciente (String cpfPaciente) {
         //TODO antes de deletar, verificar se tem alguma consulta marcada com o paciente. Se tiver, não permitir deletar
 
-        String DELETARPACIENTE = "DELETE FROM pacientes WHERE cpfPaciente = ?";
+        String DELETARPACIENTE = "DELETE FROM Pacientes WHERE cpfPaciente = ?";
         jdbcTemplate.update(DELETARPACIENTE, cpfPaciente);
     }
 
     public List<PacientesEntity> buscarPacientesPorNome (String nomePaciente){
-        String BUSCANOME = "SELECT * FROM pacientes WHERE LOWER(nomePaciente) LIKE LOWER(?)";
+        String BUSCANOME = "SELECT * FROM Pacientes WHERE LOWER(nomePaciente) LIKE LOWER(?)";
 
         try {
             return jdbcTemplate.query(
@@ -63,7 +63,7 @@ public class PacientesRepository {
     }
 
     public Optional <PacientesEntity> buscarPacientePorCpf (String cpfPaciente){
-        String BUSCACPF = "SELECT * FROM pacientes WHERE cpfPaciente = ?";
+        String BUSCACPF = "SELECT * FROM Pacientes WHERE cpfPaciente = ?";
 
         try {
             List<PacientesEntity> pacientes = jdbcTemplate.query(BUSCACPF, new Object[]{cpfPaciente}, new BeanPropertyRowMapper<>(PacientesEntity.class));
@@ -75,7 +75,7 @@ public class PacientesRepository {
     }
 
     public List<PacientesEntity> listarPacientes (){
-        String LISTARPACIENTES = "SELECT * FROM pacientes";
+        String LISTARPACIENTES = "SELECT * FROM Pacientes";
 
         try {
             return jdbcTemplate.query(LISTARPACIENTES, new BeanPropertyRowMapper<>(PacientesEntity.class));

@@ -21,70 +21,70 @@ public class ConsultasRepository {
     }
 
     public void marcarConsulta(ConsultasEntity consulta) {
-        String MARCARCONSULTA = "CALL marcarConsulta(?, ?, ?, ?, ?)";
+        String MARCARCONSULTA = "INSERT INTO Consultas (cpfPaciente, crm, dataConsulta, motivoConsulta, valorConsulta) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(MARCARCONSULTA, consulta.getPaciente().getCpfPaciente(),
                 consulta.getMedico().getCrm(), consulta.getDataConsulta(), consulta.getMotivoConsulta(), consulta.getValorConsulta());
     }
 
     public List<ConsultasEntity> listarTodasConsultas() {
-        String LISTARCONSULTAS = "CALL todasConsultas";
+        String LISTARCONSULTAS = "SELECT * FROM Consultas";
         return jdbcTemplate.query(LISTARCONSULTAS, consultaRowMapper);
     }
 
-    public Optional<ConsultasEntity> buscarConsultaPorId(Integer idConsulta){
-        String BUSCARCONSULTAID = "CALL buscarConsultaPorId(?)";
+    public Optional<ConsultasEntity> buscarConsultaPorId(Integer idConsulta) {
+        String BUSCARCONSULTAID = "SELECT * FROM Consultas WHERE idConsulta = ?";
 
         try {
             List<ConsultasEntity> consulta = jdbcTemplate.query(BUSCARCONSULTAID, new Object[]{idConsulta}, consultaRowMapper);
             return consulta.stream().findFirst();
         } catch (EmptyResultDataAccessException e) {
-            // se nao achar, retorna vazio
+            // se não achar, retorna vazio
             return Optional.empty();
         }
     }
 
     public List<ConsultasEntity> listarConsultasPorNomePaciente(String nomePaciente) {
-        String CONSULTASNOMEPACIENTE = "CALL listarConsultasPorNomePaciente(?)";
+        String CONSULTASNOMEPACIENTE = "SELECT * FROM Consultas WHERE cpfPaciente IN (SELECT cpfPaciente FROM Pacientes WHERE LOWER(nomePaciente) LIKE ?)";
         return jdbcTemplate.query(CONSULTASNOMEPACIENTE, consultaRowMapper, "%" + nomePaciente.toLowerCase(Locale.ROOT) + "%");
     }
 
     public List<ConsultasEntity> listarConsultasPorNomeMedico(String nomeMedico) {
-        String CONSULTASNOMEMEDICO = "CALL listarConsultasPorNomeMedico(?)";
+        String CONSULTASNOMEMEDICO = "SELECT * FROM Consultas WHERE crm IN (SELECT crm FROM Medicos WHERE LOWER(nomeMedico) LIKE ?)";
         return jdbcTemplate.query(CONSULTASNOMEMEDICO, consultaRowMapper, "%" + nomeMedico.toLowerCase(Locale.ROOT) + "%");
     }
 
     public void cancelarConsulta(Integer idConsulta) {
-        String DELETARCONSULTA = "DELETE FROM consultas WHERE idConsulta = ?";
+        String DELETARCONSULTA = "DELETE FROM Consultas WHERE idConsulta = ?";
         jdbcTemplate.update(DELETARCONSULTA, idConsulta);
     }
 
     public List<ConsultasEntity> listarConsultasPorCrmMedico(String crmMedico) {
-        String CONSULTASCRM = "CALL listarConsultasPorCrmMedico(?)";
+        String CONSULTASCRM = "SELECT * FROM Consultas WHERE crm = ?";
         return jdbcTemplate.query(CONSULTASCRM, consultaRowMapper, crmMedico);
     }
 
     public List<ConsultasEntity> listarConsultasPorCpfPaciente(String cpfPaciente) {
-        String CONSULTASCPF = "CALL listarConsultasPorCpfPaciente(?)";
+        String CONSULTASCPF = "SELECT * FROM Consultas WHERE cpfPaciente = ?";
         return jdbcTemplate.query(CONSULTASCPF, consultaRowMapper, cpfPaciente);
     }
 
     public List<ConsultasEntity> listarConsultasPorData(LocalDateTime inicioDoDia, LocalDateTime finalDoDia) {
-        String CONSULTASDATA = "CALL listarConsultasPorData(?, ?)";
+        String CONSULTASDATA = "SELECT * FROM Consultas WHERE dataConsulta BETWEEN ? AND ?";
         return jdbcTemplate.query(CONSULTASDATA, consultaRowMapper, inicioDoDia, finalDoDia);
     }
 
     public List<ConsultasEntity> listarConsultasMedicosData(LocalDateTime inicioDoDia, LocalDateTime finalDoDia, String crm) {
-        String CONSULTASDATAEMEDICO = "CALL listarConsultasMedicosData(?, ?, ?)";
-        return jdbcTemplate.query(CONSULTASDATAEMEDICO, consultaRowMapper, inicioDoDia, finalDoDia, crm);
+        String CONSULTASDATAEMEDICO = "SELECT * FROM Consultas WHERE crm = ? AND dataConsulta BETWEEN ? AND ?";
+        return jdbcTemplate.query(CONSULTASDATAEMEDICO, consultaRowMapper, crm, inicioDoDia, finalDoDia);
     }
 
     public List<ConsultasEntity> listarConsultasPacienteDia(LocalDateTime inicioDoDia, LocalDateTime finalDoDia, String cpf) {
-        String CONSULTASDATAEPACIENTE = "CALL listarConsultasPacienteDia(?, ?, ?)";
-        return jdbcTemplate.query(CONSULTASDATAEPACIENTE, consultaRowMapper, inicioDoDia, finalDoDia, cpf);
+        String CONSULTASDATAEPACIENTE = "SELECT * FROM Consultas WHERE cpfPaciente = ? AND dataConsulta BETWEEN ? AND ?";
+        return jdbcTemplate.query(CONSULTASDATAEPACIENTE, consultaRowMapper, cpf, inicioDoDia, finalDoDia);
     }
 
     public List<ConsultasEntity> listarConsultasPacienteMedico(String cpfPaciente, String crm) {
-        String CONSULTASCPFCRM = "CALL listarConsultasPacienteMedico(?, ?)";
+        String CONSULTASCPFCRM = "SELECT * FROM Consultas WHERE cpfPaciente = ? AND crm = ?";
         return jdbcTemplate.query(CONSULTASCPFCRM, consultaRowMapper, cpfPaciente, crm);
     }
 }

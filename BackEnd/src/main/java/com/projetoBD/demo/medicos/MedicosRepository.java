@@ -16,7 +16,7 @@ public class MedicosRepository {
     private JdbcTemplate jdbcTemplate;
     public void cadastrarMedico (MedicosEntity medico){
 
-        String CADASTRARMEDICO = "INSERT INTO medicos (nomeMedico, crm, dataNascMedico, " +
+        String CADASTRARMEDICO = "INSERT INTO Medicos (nomeMedico, crm, dataNascMedico, " +
                 "sexoMedico, emailMedico, celularMedico, tipoUsuario ) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(CADASTRARMEDICO, medico.getNomeMedico(), medico.getCrm(), medico.getDataNascMedico(),
@@ -25,7 +25,7 @@ public class MedicosRepository {
     }
 
     public void atualizarMedico(MedicosEntity medico) {
-        String ATUALIZARMEDICO = "UPDATE medicos SET nomeMedico = ?, dataNascMedico = ?, " +
+        String ATUALIZARMEDICO = "UPDATE Medicos SET nomeMedico = ?, dataNascMedico = ?, " +
                 "emailMedico = ?, celularMedico = ? WHERE crm = ?";
 
         try {
@@ -37,12 +37,12 @@ public class MedicosRepository {
     }
 
     public void deletarMedico (String crm) {
-        String DELETARMEDICO = "DELETE FROM medicos WHERE crm = ?";
+        String DELETARMEDICO = "DELETE FROM Medicos WHERE crm = ?";
         jdbcTemplate.update(DELETARMEDICO, crm);
     }
 
     public List<MedicosEntity> buscarMedicosPorNome (String nomeMedico){
-        String BUSCANOME = "SELECT * FROM medicos WHERE LOWER(nomeMedico) LIKE LOWER(?)";
+        String BUSCANOME = "SELECT * FROM Medicos WHERE LOWER(nomeMedico) LIKE LOWER(?)";
 
         try {
             return jdbcTemplate.query(
@@ -61,7 +61,7 @@ public class MedicosRepository {
     }
 
     public Optional<MedicosEntity> buscarMedicoPorCrm(String crm){
-        String BUSCACRM = "SELECT * FROM medicos WHERE crm = ?";
+        String BUSCACRM = "SELECT * FROM Medicos WHERE crm = ?";
 
         try {
             List<MedicosEntity> medicos = jdbcTemplate.query(BUSCACRM, new Object[]{crm}, new BeanPropertyRowMapper<>(MedicosEntity.class));
@@ -73,7 +73,7 @@ public class MedicosRepository {
     }
 
     public List<MedicosEntity> listarMedicos (){
-        String LISTARMEDICOS = "SELECT * FROM medicos";
+        String LISTARMEDICOS = "SELECT * FROM Medicos";
 
         try {
             return jdbcTemplate.query(LISTARMEDICOS, new BeanPropertyRowMapper<>(MedicosEntity.class));

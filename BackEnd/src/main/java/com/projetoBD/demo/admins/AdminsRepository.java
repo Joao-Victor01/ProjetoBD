@@ -17,7 +17,7 @@ public class AdminsRepository {
     private JdbcTemplate jdbcTemplate;
     public void cadastrarAdmin(AdminsEntity admin){
 
-        String CADASTRARADMIN = "INSERT INTO admins (nomeAdmin, cpfAdmin, dataNascAdmin, " +
+        String CADASTRARADMIN = "INSERT INTO Admins (nomeAdmin, cpfAdmin, dataNascAdmin, " +
                 "sexoAdmin, emailAdmin, celularAdmin, tipoUsuario) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(CADASTRARADMIN, admin.getNomeAdmin(), admin.getCpfAdmin(), admin.getDataNascAdmin(),
@@ -26,7 +26,7 @@ public class AdminsRepository {
     }
 
     public void atualizarAdmin(AdminsEntity admin) {
-        String ATUALIZARADMIN= "UPDATE admins SET nomeAdmin = ?, dataNascAdmin = ?, celularAdmin = ?, emailAdmin = ? WHERE cpfAdmin = ?";
+        String ATUALIZARADMIN= "UPDATE Admins SET nomeAdmin = ?, dataNascAdmin = ?, celularAdmin = ?, emailAdmin = ? WHERE cpfAdmin = ?";
 
         try {
             jdbcTemplate.update(ATUALIZARADMIN, admin.getNomeAdmin(), admin.getDataNascAdmin(),
@@ -38,12 +38,12 @@ public class AdminsRepository {
 
     public void deletarAdmin (String cpfAdmin) {
 
-        String DELETARADMIN = "DELETE FROM admins WHERE cpfAdmin = ?";
+        String DELETARADMIN = "DELETE FROM Admins WHERE cpfAdmin = ?";
         jdbcTemplate.update(DELETARADMIN, cpfAdmin);
     }
 
     public Optional<AdminsEntity> buscarAdminPorCpf (String cpfAdmin){
-        String BUSCACPF = "SELECT * FROM admins WHERE cpfAdmin = ?";
+        String BUSCACPF = "SELECT * FROM Admins WHERE cpfAdmin = ?";
 
         try {
             List<AdminsEntity> admin = jdbcTemplate.query(BUSCACPF, new Object[]{cpfAdmin}, new BeanPropertyRowMapper<>(AdminsEntity.class));
